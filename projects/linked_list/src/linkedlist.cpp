@@ -8,7 +8,6 @@ struct Node_linkedList
     Node_linkedList *prevNode;
 };
 
-
 // Class Constructor
 LinkedList::LinkedList()
 {
@@ -18,6 +17,14 @@ LinkedList::LinkedList()
 
 // Class Methods
 
+/**
+ * @brief LinkedList::create_node
+ * @param data
+ * @return LinkedList::Node_LinkedList
+ * @details The create_node method takes in data to be stored
+ *          in the node, and creates the node. The created node
+ *          is then returned to the calling function to link to the list.
+ */
 LinkedList::Node_linkedList* LinkedList::create_node(int data)
 {
     Node_linkedList *tempNode;
@@ -39,12 +46,15 @@ LinkedList::Node_linkedList* LinkedList::create_node(int data)
 }
 
 
-
+/**
+ * @brief LinkedList::insertNodeFront
+ * @param data
+ * @details The insertNodeFront method takes in data to be stored
+ *          in the node, and creates a new headNode. The old headNode
+ *          is moved down the list to the next position.
+ */
 void LinkedList::insertNodeFront(int data)
 {
-    //cout<<"Enter the value to be inserted: ";
-    //cin>>value;
-
     // temporary Node variables
     LinkedList::Node_linkedList *tempNode;
     LinkedList::Node_linkedList *tempPrevNode;
@@ -73,13 +83,73 @@ void LinkedList::insertNodeFront(int data)
     cout<<"Method: insertNodeFront() Complete!"<<endl;
 }
 
-
+/**
+ * @brief LinkedList::insertNodeInPos
+ * @param data
+ * @param pos
+ * @details The method insertNodeInPos takes in data to be stored,
+ *          and the position in which to store the data. A new node is
+ *          created and placed in the position specified. The rest of the
+ *          nodes originally in the list are moved down one index to accomodate.
+ */
 void LinkedList::insertNodeInPos(int data, int pos)
 {
+    int listLength = getListLength();
+    int nodeIndex = 0;
+    LinkedList::Node_linkedList *newNode;
+    LinkedList::Node_linkedList *tempNode;
+    LinkedList::Node_linkedList *tempPrevNode;
 
+    // Check to see if position is outside of the length
+    // of the linkedList
+    if ( pos > listLength )
+    {
+        cout << endl;
+        cout << "Error inserting node: index out of bounds for this list!" << endl;
+        cout << "List has a length of: " << listLength << endl << endl;
+    }
+    else
+    {
+        // start at the beginning of the list
+        newNode = create_node(data);
+
+        tempNode = headNode;
+        for(nodeIndex = 0; nodeIndex <= pos; nodeIndex++)
+        {
+            if(tempNode != NULL)
+            {
+                tempNode = tempNode->nextNode;
+            }
+            else
+            {
+                cout << endl << "Error: can't traverse list to specified node!" << endl;
+            }
+        }
+
+        // Grab the current previous node
+        tempPrevNode = tempNode->prevNode;
+
+        // Add new node
+        newNode->prevNode = tempNode->prevNode;
+        newNode->nextNode = tempNode;
+
+        // update the old nodes to connect to the new node
+        tempPrevNode->nextNode = newNode;
+        tempNode->prevNode = newNode;
+
+        cout << "Node added at index: " << pos << " with data: " << data << endl;
+    }
+    return;
 }
 
-
+/**
+ * @brief LinkedList::insertNodeBack
+ * @param data
+ * @details The method insertNodeBack takes in data to be stored in node.
+ *          A new node is created and placed in the list as the "tail" node.
+ *          The old tail node stays in place, but gets its "nextNode"
+ *          property updated.
+ */
 void LinkedList::insertNodeBack(int data)
 {
     int value;
@@ -120,10 +190,57 @@ void LinkedList::insertNodeBack(int data)
     cout<<"Method: insertNodeBack() Complete!"<<endl;
 }
 
-
+/**
+ * @brief LinkedList::deleteNodeInPos
+ * @param pos
+ * @details The method deleteNodeInPos takes in the position of the node
+ *          to be removed. The node is deleted, and the nodes following the
+ *          node that was deleted are moved up one index to accomodate.
+ */
 void LinkedList::deleteNodeInPos(int pos)
 {
+    int listLength = getListLength();
+    int nodeIndex = 0;
+    LinkedList::Node_linkedList *tempNode;
+    LinkedList::Node_linkedList *tempPrevNode;
+    LinkedList::Node_linkedList *tempNextNode;
 
+    // Check to see if position is outside of the length
+    // of the linkedList
+    if ( pos > listLength )
+    {
+        cout << endl;
+        cout << "Error deleting node: index out of bounds for this list!" << endl;
+        cout << "List has a length of: " << listLength << endl << endl;
+    }
+    else
+    {
+        // start at the beginning of the list
+        tempNode = headNode;
+        for(nodeIndex = 0; nodeIndex < pos; nodeIndex++)
+        {
+            if(tempNode != NULL)
+            {
+                tempNode = tempNode->nextNode;
+            }
+            else
+            {
+                cout << endl << "Error: can't traverse list to specified node!" << endl;
+            }
+        }
+
+        // get a reference to the prev and next nodes
+        // this needs to be done before removing node
+        tempPrevNode = tempNode->prevNode;
+        tempNextNode = tempNode->nextNode;
+
+        // remove node
+        tempPrevNode->nextNode = tempNextNode;
+        tempNextNode->prevNode = tempPrevNode;
+        free(tempNode);
+        cout << "Node Removed at index: " << pos << endl;
+    }
+    return;
 }
 
 
@@ -139,7 +256,7 @@ void LinkedList::searchList()
 }
 
 
-void LinkedList::updateList()
+void LinkedList::updateList(int data, int pos)
 {
 
 }
@@ -150,10 +267,14 @@ void LinkedList::reverseList()
 
 }
 
-
+/**
+ * @brief LinkedList::displayList
+ * @details The method displayList prints the full details
+ *          of the linked list. The method prints the location,
+ *          data, as well as double link details for each node.
+ */
 void LinkedList::displayList()
 {
-    int listLength = 0;
     int nodeIndex = 0;
     LinkedList::Node_linkedList *tempNode;
 
@@ -177,10 +298,29 @@ void LinkedList::displayList()
             cout << "Node #" << nodeIndex << " nextNode: " << tempNode->nextNode << endl;
 
             nodeIndex++;    // increment our index counter
-            listLength++;   // increment the listLength counter
             tempNode = tempNode->nextNode; // get nextNode
         }
-        cout << endl << "Total LinkedList length: " << listLength << endl;
+        cout << endl << "Total LinkedList length: " << getListLength() << endl;
     }
+}
+
+/**
+ * @brief LinkedList::getListLength
+ * @return integer representing the
+ *         current linked list length.
+ * @details The method getListLength() gets the number of nodes
+ *          currently residing inside the linked list.
+ */
+int LinkedList::getListLength() {
+
+    int nodeCount = 0;
+    Node_linkedList *tempNode = headNode;
+
+    while(tempNode != NULL)
+    {
+        nodeCount++;
+        tempNode = tempNode->nextNode;
+    }
+    return nodeCount;
 }
 

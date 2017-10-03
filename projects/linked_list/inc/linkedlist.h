@@ -27,9 +27,10 @@ public:
     void deleteNodeInPos(int pos);
     void sortList();
     void searchList();
-    void updateList();
+    void updateList(int data, int pos);
     void reverseList();
     void displayList();
+    int getListLength();
 
 protected:
 
