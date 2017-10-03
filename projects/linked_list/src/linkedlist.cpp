@@ -1,6 +1,5 @@
 #include "linkedlist.h"
 
-
 struct Node_linkedList
 {
     int data;
@@ -43,6 +42,33 @@ LinkedList::Node_linkedList* LinkedList::create_node(int data)
         tempNode->prevNode = NULL;
         return tempNode;
     }
+}
+
+/**
+ * @brief LinkedList::get_node
+ * @param position
+ * @return LinkedList::Node_LinkedList
+ */
+LinkedList::Node_linkedList* LinkedList::get_node(int position)
+{
+    int nodeIndex;
+    LinkedList::Node_linkedList *tempNode;
+
+    // set tempNode to headNode to begin traversing list
+    tempNode = headNode;
+    for(nodeIndex = 0; nodeIndex < position; nodeIndex++)
+    {
+        if(tempNode != NULL)
+        {
+            tempNode = tempNode->nextNode;
+        }
+        else
+        {
+            cout << endl << "Error: can't traverse list to specified node!" << endl;
+            return NULL;
+        }
+    }
+    return tempNode;
 }
 
 
@@ -102,11 +128,9 @@ void LinkedList::insertNodeInPos(int data, int pos)
 
     // Check to see if position is outside of the length
     // of the linkedList
-    if ( pos > listLength )
+    if ( pos > (listLength-1) )
     {
-        cout << endl;
-        cout << "Error inserting node: index out of bounds for this list!" << endl;
-        cout << "List has a length of: " << listLength << endl << endl;
+        cout << "Error inserting node at: " << pos << " index out of bounds for this list!" << endl;
     }
     else
     {
@@ -207,11 +231,9 @@ void LinkedList::deleteNodeInPos(int pos)
 
     // Check to see if position is outside of the length
     // of the linkedList
-    if ( pos > listLength )
+    if ( pos > (listLength-1) )
     {
-        cout << endl;
-        cout << "Error deleting node: index out of bounds for this list!" << endl;
-        cout << "List has a length of: " << listLength << endl << endl;
+        cout << "Error deleting node at: " << pos << " index out of bounds for this list!" << endl;
     }
     else
     {
@@ -243,22 +265,80 @@ void LinkedList::deleteNodeInPos(int pos)
     return;
 }
 
-
+/**
+ * @brief LinkedList::sortList
+ * @details The method sortList sorts the linked list based on
+ *          the data inside each node. The list is sorted numerically
+ *          from smallest to largest.
+ */
 void LinkedList::sortList()
 {
 
 }
 
-
-void LinkedList::searchList()
+/**
+ * @brief LinkedList::searchList
+ * @param data
+ * @return int nodeIndex
+ * @details The method searchList takes in data as an integer which is
+ *          then used to search through the list. The function returns
+ *          the location(s) of nodes that contain the data.
+ */
+vector<int> LinkedList::searchList(int data)
 {
+    vector<int> vector_returnNodeIndeces;
+    LinkedList::Node_linkedList *tempNode;
+    int nodeIndex = 0;
 
+    if(getListLength() > 0)
+    {
+        tempNode = headNode;
+        while(tempNode != NULL)
+        {
+            if(tempNode->data == data)
+            {
+                vector_returnNodeIndeces.push_back(nodeIndex);
+            }
+            nodeIndex++;
+            tempNode = tempNode->nextNode;
+        }
+    }
+    else
+    {
+        cout << "List is empty!";
+    }
+    return vector_returnNodeIndeces;
 }
 
-
+/**
+ * @brief LinkedList::updateList
+ * @param data
+ * @param pos
+ * @details The method updateList takes in an integer
+ *          data and position that is used to update the data
+ *          within a given node that resides at the specified position.
+ */
 void LinkedList::updateList(int data, int pos)
 {
+    int listLength = getListLength();
+    LinkedList::Node_linkedList *tempNode;
 
+    // Check to see if position is outside of the length
+    // of the linkedList
+    if ( pos > (listLength - 1) )
+    {
+        cout << endl;
+        cout << "Error updating node: index out of bounds for this list!" << endl;
+        cout << "List has a length of: " << listLength << endl << endl;
+    }
+    else
+    {
+        // get the node and update the data
+        tempNode = get_node(pos);
+        tempNode->data = data;
+    }
+    cout << "Node updated at index: " << pos << endl;
+    return;
 }
 
 
@@ -300,7 +380,7 @@ void LinkedList::displayList()
             nodeIndex++;    // increment our index counter
             tempNode = tempNode->nextNode; // get nextNode
         }
-        cout << endl << "Total LinkedList length: " << getListLength() << endl;
+        cout << endl << "Total LinkedList length: " << getListLength() << endl << endl;
     }
 }
 

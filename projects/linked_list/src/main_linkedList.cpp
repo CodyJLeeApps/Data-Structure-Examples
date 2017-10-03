@@ -23,23 +23,39 @@ int main(int argc, char *argv[])
     linkedList.insertNodeBack(4);
     linkedList.insertNodeBack(5);
 
-    // Try to create a node outside of bounds
-//    linkedList.insertNodeInPos(6, 6);
+    // Try to create a node
+    linkedList.insertNodeInPos(6, 1); // in-bounds
+    linkedList.insertNodeInPos(6, 4); // on last node
+    linkedList.insertNodeInPos(6, 7); // out-of-bounds
 
-    // Try to create a node in bounds
-    cout << endl << "Before node add:" << endl;
+    // Try to remove a node
+    linkedList.deleteNodeInPos(1);  // in-bounds
+    linkedList.deleteNodeInPos(4);  // on last node
+    linkedList.deleteNodeInPos(5);  // out-of-bounds
+
+    // print linked list
     linkedList.displayList();
-    linkedList.insertNodeInPos(6, 1);
-    cout << endl << "After node add:" << endl;
+
+    // Try to update a node
+    linkedList.updateList(3, 4); // last node
+
     linkedList.displayList();
 
-    // Try to remove a node outside of bounds
-//    linkedList.deleteNodeInPos(6);
+    vector<int> vect_test = linkedList.searchList(3);
+    if(vect_test.size() > 0)
+    {
+        cout << "Data located in location(s): ";
+        for(int index : vect_test)
+        {
+            cout << index << ", ";
+        }
+        cout << endl;
+    }
+    else
+    {
+        cout << "Data not present in list!";
+    }
 
-    // Try to remove a node in bounds
-//    cout << endl << "Before node delete:" << endl;
-//    linkedList.displayList();
-    linkedList.deleteNodeInPos(2);
-//    cout << endl << "After node delete:" << endl;
-//    linkedList.displayList();
+
+    return(0);
 }

@@ -1,6 +1,7 @@
 #ifndef LINKEDLIST_H
 #define LINKEDLIST_H
 
+#include <vector>
 #include <iostream>
 
 using namespace std;
@@ -26,16 +27,17 @@ public:
     void insertNodeBack(int data);
     void deleteNodeInPos(int pos);
     void sortList();
-    void searchList();
+    vector<int> searchList(int data);
     void updateList(int data, int pos);
     void reverseList();
     void displayList();
-    int getListLength();
 
 protected:
 
 private:
     Node_linkedList* create_node(int value);
+    Node_linkedList* get_node(int position);
+    int getListLength();
 };
 
 #endif // LINKEDLIST_H
