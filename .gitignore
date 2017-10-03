@@ -1,0 +1,8 @@
+# Files
+*.DS_STORE
+CMakeLists.txt.user
+
+# Folders
+bin
+debug
+release
